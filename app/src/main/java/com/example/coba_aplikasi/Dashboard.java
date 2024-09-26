@@ -27,7 +27,9 @@ public class Dashboard extends AppCompatActivity {
 
         navbar.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.home) {
+            if (id == R.id.cart) {
+                masukFragment(new CartFragment());
+            } else if (id == R.id.home) {
                 masukFragment(new HomeFragment());
             } else if (id == R.id.menu1) {
                 masukFragment(new MenuFragment());
