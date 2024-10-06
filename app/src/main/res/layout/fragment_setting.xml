@@ -7,11 +7,16 @@
     tools:context=".SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+
+    <Button
+        android:id="@+id/btnlogout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Setting"
-        android:textSize="25dp"
-        android:layout_gravity="center"/>
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="50dp"
+        android:layout_gravity="bottom"
+        android:backgroundTint="#C4A576"
+        android:text="Log Out" />
 
 </FrameLayout>

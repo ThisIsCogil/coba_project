@@ -20,7 +20,8 @@ import com.google.android.material.textfield.TextInputLayout;
 public class Register extends AppCompatActivity {
 
     private TextInputEditText edtemail, edtuser, edtpass;
-
+    private static final String KEY_NAME = "username";
+    private static final String KEY_PASS = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,8 @@ public class Register extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("email", email);
-                editor.putString("username", username);
-                editor.putString("password", password);
+                editor.putString(KEY_NAME, username);
+                editor.putString(KEY_PASS, password);
                 editor.apply();
 
                 Intent intent = new Intent(Register.this, Login.class);

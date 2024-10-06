@@ -16,6 +16,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class Login extends AppCompatActivity {
     private TextInputEditText edtuser, edtpass;
+    private static final String KEY_NAME = "username";
+    private static final String KEY_PASS = "password";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class Login extends AppCompatActivity {
         edtuser = findViewById(R.id.edit_user);
         edtpass = findViewById(R.id.edittext_pass);
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        String username = intent.getStringExtra(KEY_NAME);
         edtuser.setText(username);
         Button btnlog = findViewById(R.id.btnlogin);
 
@@ -38,8 +41,8 @@ public class Login extends AppCompatActivity {
                 String inputPassword = edtpass.getText().toString();
 
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                String savedUsername = sharedPreferences.getString("username", null);
-                String savedPassword = sharedPreferences.getString("password", null);
+                String savedUsername = sharedPreferences.getString(KEY_NAME, null);
+                String savedPassword = sharedPreferences.getString(KEY_PASS, null);
 
                 if (inputUsername.equals(savedUsername) && inputPassword.equals(savedPassword)) {
                     Intent intent = new Intent(Login.this, Dashboard.class);
