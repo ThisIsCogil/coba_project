@@ -48,3 +48,9 @@ android {
         androidTestImplementation(libs.espresso.core)
     }
 }
+dependencies {
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
+}

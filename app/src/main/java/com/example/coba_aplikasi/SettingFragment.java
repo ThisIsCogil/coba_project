@@ -67,7 +67,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                // Logika logout, misalnya menghapus session dan kembali ke login activity
+
                 Intent intent = new Intent(getActivity(), Login.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
