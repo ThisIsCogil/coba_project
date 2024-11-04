@@ -1,60 +1,79 @@
 package com.example.coba_aplikasi;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class Register extends AppCompatActivity {
+public class Register extends BottomSheetDialogFragment {
 
-    private TextInputEditText edtemail, edtuser, edtpass;
-    private static final String KEY_NAME = "username";
-    private static final String KEY_PASS = "password";
+    private TextInputEditText etUser,etEmail, etPassword, etConfirmPassword;
+    private Button btnRegister;
+    private TextView tvSwitchToLogin;
 
+    public Register() {
+        // Required empty public constructor
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_register, container, false);
 
-        edtemail = findViewById(R.id.edit_email);
-        edtuser = findViewById(R.id.edit_user);
-        edtpass = findViewById(R.id.edittext_pass);
-        Button btnreg = findViewById(R.id.btnregister);
+        etUser = view.findViewById(R.id.edit_user);
+        etEmail = view.findViewById(R.id.edit_email);
+        etPassword = view.findViewById(R.id.edittext_pass);
+        etConfirmPassword = view.findViewById(R.id.edittext_confirmpass);
+        btnRegister = view.findViewById(R.id.button_Register);
+        tvSwitchToLogin = view.findViewById(R.id.tvSwitchToLogin);
 
-        btnreg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = edtemail.getText().toString();
-                String username = edtuser.getText().toString();
-                String password = edtpass.getText().toString();
-
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("email", email);
-                editor.putString(KEY_NAME, username);
-                editor.putString(KEY_PASS, password);
-                editor.apply();
-
-                Intent intent = new Intent(Register.this, Login.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
+        btnRegister.setOnClickListener(v -> {
+            String user = etUser.getText().toString();
+            String email = etEmail.getText().toString();
+            String password = etPassword.getText().toString();
+            String confirmPassword = etConfirmPassword.getText().toString();
+            if (validateInputs(user, email, password, confirmPassword)) {
+                // Handle registration logic here
+                Toast.makeText(getContext(), "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
+                dismiss();
+                new Login().show(getParentFragmentManager(), "LoginBottomSheet");
             }
         });
 
+        tvSwitchToLogin.setOnClickListener(v -> {
+            dismiss();
+            new Login().show(getParentFragmentManager(), "LoginBottomSheet");
+        });
 
+        return view;
+    }
 
-}
+    private boolean validateInputs(String user,String email, String password, String confirmPassword) {
+        if (user.isEmpty()) {
+            etUser.setError("Username Tidak Boleh Kosong");
+            return false;
+        }
+        if (email.isEmpty()) {
+            etEmail.setError("Email Tidak Boleh Kosong");
+            return false;
+        }
+        if (password.isEmpty()) {
+            etPassword.setError("Password Tidak Boleh Kosong");
+            return false;
+        }
+        if (!password.equals(confirmPassword)) {
+            etConfirmPassword.setError("Password Tidak Sama");
+            return false;
+        }
+        return true;
+    }
 }
