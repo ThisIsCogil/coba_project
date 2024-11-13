@@ -44,7 +44,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.0")
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("com.google.android.material:material:1.4.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.3")
 

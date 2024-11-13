@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
+    android:layout_height="230dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="154dp"
+            android:layout_height="144dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="Kebanggan Situbondo"
+            app:layout_constraintBottom_toTopOf="@+id/item_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/item_text"
+            android:layout_width="108dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="98dp"
+            android:layout_marginEnd="91dp"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_button"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <TextView
+            android:id="@+id/item_text1"
+            android:layout_width="108dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-black"
+            app:layout_constraintBottom_toTopOf="@+id/item_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_image" />
+
+        <Button
+            android:id="@+id/item_button"
+            android:layout_width="37dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/square_button"
+            app:backgroundTint="@color/black"
+            android:drawableTop="@drawable/ic_add"
+            android:text="o"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
