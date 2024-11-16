@@ -23,7 +23,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:itemRippleColor="#FCFBE7"
+        android:background="@color/white"
+        app:itemRippleColor="#583C30"
+        app:itemIconTint="@color/btm_navbar"
         app:menu="@menu/btn_navigation"
         app:labelVisibilityMode="labeled"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

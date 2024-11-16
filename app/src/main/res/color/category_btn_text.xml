@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Text color when the button is pressed -->
+    <item android:state_pressed="true" android:color="@color/white" /> <!-- White text -->
+
+    <!-- Text color when the button is selected -->
+    <item android:state_selected="true" android:color="@color/white" /> <!-- White text -->
+
+    <!-- Default text color -->
+    <item android:color="@color/brown" /> <!-- Brown text -->
+</selector>

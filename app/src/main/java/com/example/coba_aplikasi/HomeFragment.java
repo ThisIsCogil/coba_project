@@ -120,3 +120,4 @@ public class HomeFragment extends Fragment {
         handler.postDelayed(runnable, 3000); // Resume sliding when fragment is resumed
     }
 }
+
