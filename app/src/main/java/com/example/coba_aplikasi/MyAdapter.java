@@ -11,18 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.MyItem;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private List<MyItem> itemList;
+    private List<MyItem> originaList;
+    private List<MyItem> filteredList;
     private Context context;
 
     public MyAdapter(Context context, List<MyItem> itemList) {
         this.context = context;
-        this.itemList = itemList;
+        this.originaList = itemList;
+        this.filteredList = new ArrayList<>(itemList);
     }
 
     @NonNull
@@ -34,7 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        MyItem item = itemList.get(position);
+        MyItem item = filteredList.get(position);
         holder.textView1.setText(item.getTextnama());
         holder.textView.setText(item.getText());
         holder.imageView.setImageResource(item.getImageResId());
@@ -47,8 +50,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return filteredList.size();
     }
+
+    // Method to filter the list
+    public void filter(String text) {
+        List<MyItem> filteredList = new ArrayList<>();
+        for (MyItem item : originaList) {
+            if (item.getTextnama().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        this.originaList = filteredList;
+        notifyDataSetChanged();
+    }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;

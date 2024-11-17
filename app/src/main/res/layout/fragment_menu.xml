@@ -16,20 +16,21 @@
 
         <!-- Horizontal Category Buttons -->
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBar"
             android:layout_width="280dp"
             android:layout_height="50dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="9dp"
-            android:background="@drawable/search_bar_bg"
-            android:drawablePadding="8dp"
-            android:hint="Search"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="14sp"
-            app:endIconMode="clear_text"
+            android:background="@drawable/search_bar"
+            android:drawablePadding="0dp"
+            app:iconifiedByDefault="false"
+            app:searchHintIcon="@null"
+            app:queryHint="Cari..."
+            app:queryBackground="@null"
+            android:focusable="false"
+            app:closeIcon="@drawable/ic_cleartext"
             app:layout_constraintEnd_toStartOf="@+id/filterButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,9 +40,9 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="19dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="12dp"
             android:background="@drawable/search_btn_bg"
-            android:src="@drawable/ic_search"
+            android:src="@drawable/ic_cart"
             android:contentDescription="null"
             app:layout_constraintBottom_toBottomOf="@id/searchBar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,10 +53,11 @@
             android:id="@+id/categoryScroll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="1dp"
             android:paddingVertical="8dp"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchBar">
 
@@ -111,6 +113,23 @@
 
             </LinearLayout>
         </HorizontalScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="591dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/categoryScroll"
+            app:layout_constraintVertical_bias="0.109"
+            app:spanCount="2" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
