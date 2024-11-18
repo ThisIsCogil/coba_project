@@ -24,8 +24,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@color/choco"
-        app:itemRippleColor="@color/white"
         app:itemTextColor="@color/white"
+        app:itemRippleColor="@color/white"
         app:itemIconTint="@color/btm_navbar"
         app:menu="@menu/btn_navigation"
         app:labelVisibilityMode="labeled"/>

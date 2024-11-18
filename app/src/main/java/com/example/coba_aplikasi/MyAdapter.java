@@ -55,13 +55,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     // Method to filter the list
     public void filter(String text) {
-        List<MyItem> filteredList = new ArrayList<>();
-        for (MyItem item : originaList) {
-            if (item.getTextnama().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(item);
+        filteredList.clear();
+        if (text.isEmpty()) {
+            filteredList.addAll(originaList);
+        } else {
+            for (MyItem item : originaList) {
+                if (item.getTextnama().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(item);
+                }
             }
         }
-        this.originaList = filteredList;
         notifyDataSetChanged();
     }
 

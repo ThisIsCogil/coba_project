@@ -2,6 +2,7 @@ package com.example.coba_aplikasi;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
@@ -57,7 +58,7 @@ public class MenuFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
         // Initialize UI components
-//        SearchView searchView = view.findViewById(R.id.searchBar);
+        SearchView searchView = view.findViewById(R.id.searchBar);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         int numberOfColumns = 2;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
@@ -86,19 +87,19 @@ public class MenuFragment extends Fragment {
         });
 
         // Set up SearchView
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                adapter.filter(query); // Filter the adapter
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                adapter.filter(newText); // Update filter as the user types
-//                return true;
-//            }
-//        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.filter(query); // Filter the adapter
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText); // Update filter as the user types
+                return true;
+            }
+        });
 
         return view;
     }
