@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.coba_aplikasi.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Dashboard extends AppCompatActivity {
@@ -32,7 +31,7 @@ public class Dashboard extends AppCompatActivity {
             } else if (id == R.id.menu1) {
                 masukFragment(new MenuFragment());
             } else if (id == R.id.cart) {
-                masukFragment(new CartFragment());
+                masukFragment(new HistoryFragment());
             } else if (id == R.id.setting) {
                 masukFragment(new SettingFragment());
             } else {

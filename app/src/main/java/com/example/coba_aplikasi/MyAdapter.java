@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,10 +43,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.textView.setText(item.getText());
         holder.imageView.setImageResource(item.getImageResId());
 
-        holder.button.setOnClickListener(v -> {
-            // Handle button click
-            // You can show detailed information or navigate to another activity
-        });
+        holder.button.setOnClickListener(v ->
+                Toast.makeText(context, "Clicked: " + item.getText(), Toast.LENGTH_SHORT).show());
     }
 
     @Override
