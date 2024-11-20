@@ -72,6 +72,12 @@ public class MenuFragment extends Fragment {
         itemList.add(new MyItem("Robusta", "Budak 04", R.drawable.image1));
         itemList.add(new MyItem("Arabica", "Budak 05", R.drawable.image2));
         itemList.add(new MyItem("Moccacino", "Budak 06", R.drawable.image3));
+        itemList.add(new MyItem("Kapal api", "Budak 07", R.drawable.image1));
+        itemList.add(new MyItem("Torabika", "Budak 08", R.drawable.image2));
+        itemList.add(new MyItem("Luwak Coffee", "Budak 09", R.drawable.image3));
+        itemList.add(new MyItem("ABC Plus", "Budak 10", R.drawable.image1));
+        itemList.add(new MyItem("ABC Susu", "Budak 11", R.drawable.image2));
+        itemList.add(new MyItem("Kopi Gadjah", "Budak 12", R.drawable.image3));
 
         // Set up RecyclerView
         adapter = new MyAdapter(getContext(), itemList);
