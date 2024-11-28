@@ -28,7 +28,7 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBarhome"
-            android:layout_width="290dp"
+            android:layout_width="335dp"
             android:layout_height="42dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="74dp"
@@ -45,13 +45,13 @@
 
         <ImageView
             android:id="@+id/notifhomeButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="78dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="106dp"
+            android:layout_marginTop="40dp"
             android:contentDescription="null"
             android:src="@drawable/ic_bell"
-            app:layout_constraintStart_toEndOf="@+id/searchBarhome"
+            app:layout_constraintStart_toEndOf="@+id/textWelcome"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2

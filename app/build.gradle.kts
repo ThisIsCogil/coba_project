@@ -50,6 +50,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.4.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation ("androidx.core:core-ktx:1.6.0")
+    implementation ("com.github.VishnuSivadasVS:Advanced-HttpURLConnection:1.2")
 
 
 
