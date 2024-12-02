@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
 import com.example.coba_aplikasi.Dashboard;
 import com.example.coba_aplikasi.R;
 import com.example.coba_aplikasi.Register;
@@ -14,6 +15,7 @@ import com.vishnusivadas.advanced_httpurlconnection.PutData;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Login extends BottomSheetDialogFragment {
 
     private TextInputEditText etUserlogin, etPasswordlogin;
     private Button btnLogin;
     private TextView tvSwitchToRegister;
+    private RequestQueue requestQueue;
 
     public Login() {
         // Required empty public constructor
@@ -42,44 +60,102 @@ public class Login extends BottomSheetDialogFragment {
         btnLogin = view.findViewById(R.id.button_Login);
         tvSwitchToRegister = view.findViewById(R.id.tvSwitchToRegister);
 
-        btnLogin.setOnClickListener(v -> {
-            String user = etUserlogin.getText().toString();
-            String password = etPasswordlogin.getText().toString();
+        requestQueue = Volley.newRequestQueue(requireContext());
 
-            if (!user.equals("") && !password.equals("")) {
-
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    String[] field = new String[2];
-                    field[0] = "username";
-                    field[1] = "password";
-                    String[] data = new String[2];
-                    data[0] = user;
-                    data[1] = password;
-                    PutData putData = new PutData("http://192.168.1.7/makaryo/login.php", "POST", field, data);
-                    if (putData.startPut()) {
-                        if (putData.onComplete()) {
-                            String result = putData.getResult();
-
-                            if (result.equals("Login Success")) {
-                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                                dismiss();
-                                Intent intent = new Intent(getActivity(), Dashboard.class);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginUser();
             }
         });
 
         tvSwitchToRegister.setOnClickListener(v -> {
-            dismiss();
-            new Register().show(getParentFragmentManager(), "RegisterBottomSheet");
+            // Assuming this fragment is shown in a BottomSheetDialogFragment
+            dismiss(); // Dismiss the current fragment
+            new Register().show(getParentFragmentManager(), "LoginBottomSheet");
         });
 
         return view;
+    }
+
+    private void LoginUser() {
+        String user = etUserlogin.getText().toString();
+        String password = etPasswordlogin.getText().toString();
+
+        // Create JSON object
+        JSONObject jsonBody = new JSONObject();
+        try {
+
+            jsonBody.put("username", user);
+            jsonBody.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.1.7/makaryo2/api.php?action=login",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("ResponseRaw", response); // Log the raw response
+                        try {
+                            // Attempt to parse the response as JSON
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String status = jsonResponse.getString("status");
+                            String message = jsonResponse.getString("message");
+                            if ("success".equals(status)) {
+                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                dismiss(); // Dismiss the current fragment
+                                Intent intent = new Intent(getActivity(), Dashboard.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Berhasil Login", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String errorMessage;
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            String responseBody = new String(error.networkResponse.data);
+                            Log.e("VolleyError", responseBody); // Log the error response
+                            errorMessage = "Error: " + responseBody;
+                        } else {
+                            errorMessage = "Error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error");
+                        }
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", user);
+                params.put("password", password);
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return jsonBody.toString().getBytes(StandardCharsets.UTF_8);
+            }
+        };
+
+        if (user.isEmpty() || password.isEmpty()) {
+            Toast.makeText(getContext(), "Field Tidak Boleh Kosong", Toast.LENGTH_SHORT).show();
+        } else {
+            RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+            requestQueue.add(stringRequest);
+        }
     }
 }
