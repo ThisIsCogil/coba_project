@@ -11,7 +11,6 @@ import com.example.coba_aplikasi.R;
 import com.example.coba_aplikasi.Register;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -92,7 +91,7 @@ public class Login extends BottomSheetDialogFragment {
             e.printStackTrace();
         }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.1.7/makaryo2/api.php?action=login",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.146.156/makaryo2/api.php?action=login",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -104,7 +103,7 @@ public class Login extends BottomSheetDialogFragment {
                             String message = jsonResponse.getString("message");
                             if ("success".equals(status)) {
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                                dismiss(); // Dismiss the current fragment
+                                dismiss();
                                 Intent intent = new Intent(getActivity(), Dashboard.class);
                                 startActivity(intent);
                             } else {
@@ -112,7 +111,7 @@ public class Login extends BottomSheetDialogFragment {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "Berhasil Login", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Server Error", Toast.LENGTH_SHORT).show();
 
                         }
                     }

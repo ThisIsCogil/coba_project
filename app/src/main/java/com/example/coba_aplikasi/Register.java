@@ -8,7 +8,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -95,7 +94,7 @@ public class Register extends BottomSheetDialogFragment {
             e.printStackTrace();
         }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.1.7/makaryo2/api.php?action=register",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.146.156/makaryo2/api.php?action=register",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -114,7 +113,7 @@ public class Register extends BottomSheetDialogFragment {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "Berhasil Register", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Server Error", Toast.LENGTH_SHORT).show();
 
                         }
                     }

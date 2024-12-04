@@ -1,26 +1,34 @@
 package model;
 
-public class MyItem {
-    private String text;
-    private String textnama;
-    private int imageResId;
+import android.graphics.Bitmap;
 
-    public MyItem(String textnama, String text, int imageResId) {
+public class MyItem {
+    private int id;
+    private double price;
+    private String textnama;
+    private Bitmap imageItem;
+
+    public MyItem(int id ,String textnama, double price, Bitmap imageItem) {
+        this.id = id;
         this.textnama = textnama;
-        this.text = text;
-        this.imageResId = imageResId;
+        this.price = price;
+        this.imageItem = imageItem;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTextnama() {
         return textnama;
     }
 
-    public String getText() {
-        return text;
+    public double getPrice() {
+        return price;
     }
 
 
-    public int getImageResId() {
-        return imageResId;
+    public Bitmap getImageItem() {
+        return imageItem;
     }
 }

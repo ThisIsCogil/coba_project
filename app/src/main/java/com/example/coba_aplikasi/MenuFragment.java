@@ -8,10 +8,25 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +40,7 @@ public class MenuFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private MyAdapter adapter;
+    private MyAdapter myAdapter;
     private List<MyItem> itemList;
     private RecyclerView recyclerView;
 
@@ -55,58 +70,73 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        return inflater.inflate(R.layout.fragment_menu, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // Initialize UI components
         SearchView searchView = view.findViewById(R.id.searchBar);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
+
+        // Setup RecyclerView
         int numberOfColumns = 2;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // Initialize data
         itemList = new ArrayList<>();
-        itemList.add(new MyItem("Americano", "Budak 01", R.drawable.image1));
-        itemList.add(new MyItem("Latte", "Budak 02", R.drawable.image2));
-        itemList.add(new MyItem("Capuccino", "Budak 03", R.drawable.image3));
-        itemList.add(new MyItem("Robusta", "Budak 04", R.drawable.image1));
-        itemList.add(new MyItem("Arabica", "Budak 05", R.drawable.image2));
-        itemList.add(new MyItem("Moccacino", "Budak 06", R.drawable.image3));
-        itemList.add(new MyItem("Kapal api", "Budak 07", R.drawable.image1));
-        itemList.add(new MyItem("Torabika", "Budak 08", R.drawable.image2));
-        itemList.add(new MyItem("Luwak Coffee", "Budak 09", R.drawable.image3));
-        itemList.add(new MyItem("ABC Plus", "Budak 10", R.drawable.image1));
-        itemList.add(new MyItem("ABC Susu", "Budak 11", R.drawable.image2));
-        itemList.add(new MyItem("Kopi Gadjah", "Budak 12", R.drawable.image3));
+        myAdapter = new MyAdapter(getContext(), itemList);
+        recyclerView.setAdapter(myAdapter);
 
-        // Set up RecyclerView
-        adapter = new MyAdapter(getContext(), itemList);
-        recyclerView.setAdapter(adapter);
+        // Load items from API
+        loadItemsFromApi();
 
         // Adjust for Bottom Navigation Bar
-        ViewCompat.setOnApplyWindowInsetsListener(recyclerView, new androidx.core.view.OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets) {
-                view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), insets.getSystemWindowInsetBottom());
-                return insets;
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView, (v, insets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
+            return insets;
         });
+    }
 
-        // Set up SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                adapter.filter(query); // Filter the adapter
-                return true;
-            }
+    private void loadItemsFromApi() {
+        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items"; // Replace with your API URL
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText); // Update filter as the user types
-                return true;
-            }
-        });
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
-        return view;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    itemList.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject jsonObject = response.getJSONObject(i);
+                            int id = jsonObject.getInt("item_id");
+                            String name = jsonObject.getString("item_name");
+                            double price = jsonObject.getDouble("price");
+
+                            // Decode Base64 image
+                            String base64Image = jsonObject.getString("image_item");
+                            byte[] imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT);
+
+                            // Create a bitmap from the image bytes
+                            Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+                            // Add the item to the list
+                            itemList.add(new MyItem(id, name, price, imageBitmap));
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        Log.e("Volley", "JSON Parsing Error: " + e.getMessage());
+                    }
+                },
+                error -> Log.e("Volley", "Error: " + error.getMessage())
+        );
+
+        requestQueue.add(jsonArrayRequest);
     }
 }

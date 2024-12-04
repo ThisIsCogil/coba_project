@@ -4,29 +4,26 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import model.MyItem;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private List<MyItem> originaList;
-    private List<MyItem> filteredList;
     private Context context;
+    private List<MyItem> itemList;
 
     public MyAdapter(Context context, List<MyItem> itemList) {
         this.context = context;
-        this.originaList = itemList;
-        this.filteredList = new ArrayList<>(itemList);
+        this.itemList = itemList;
     }
 
     @NonNull
@@ -38,48 +35,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        MyItem item = filteredList.get(position);
-        holder.textView1.setText(item.getTextnama());
-        holder.textView.setText(item.getText());
-        holder.imageView.setImageResource(item.getImageResId());
+        MyItem currentItem = itemList.get(position);
+        holder.name.setText(currentItem.getTextnama());
+        holder.price.setText("Rp " + currentItem.getPrice());
 
-        holder.button.setOnClickListener(v ->
-                Toast.makeText(context, "Clicked: " + item.getText(), Toast.LENGTH_SHORT).show());
+        // Load the image from URL using Glide
+        holder.image.setImageBitmap(currentItem.getImageItem());
     }
 
     @Override
     public int getItemCount() {
-        return filteredList.size();
+        return itemList.size();
     }
-
-    // Method to filter the list
-    public void filter(String text) {
-        filteredList.clear();
-        if (text.isEmpty()) {
-            filteredList.addAll(originaList);
-        } else {
-            for (MyItem item : originaList) {
-                if (item.getTextnama().toLowerCase().contains(text.toLowerCase())) {
-                    filteredList.add(item);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
-
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
-        TextView textView1;
-        Button button;
+        TextView name, price;
+        ImageView image;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.item_image);
-            textView = itemView.findViewById(R.id.item_text);
-            textView1 = itemView.findViewById(R.id.item_text1);
-            button = itemView.findViewById(R.id.item_button);
+            name = itemView.findViewById(R.id.item_text1);
+            price = itemView.findViewById(R.id.item_text);
+            image = itemView.findViewById(R.id.item_image);
         }
     }
 }

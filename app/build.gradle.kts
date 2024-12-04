@@ -50,8 +50,10 @@ dependencies {
     implementation ("com.google.android.material:material:1.4.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation ("androidx.core:core-ktx:1.6.0")
-    implementation ("com.github.VishnuSivadasVS:Advanced-HttpURLConnection:1.2")
     implementation ("com.android.volley:volley:1.2.1")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
 
 
 

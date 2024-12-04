@@ -1,6 +1,13 @@
 package com.example.coba_aplikasi;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,26 +16,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import model.MyItem;
 
-
 public class HomeFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-    // Slider and RecyclerView components
     private ViewPager2 viewPager;
     private SliderAdapter sliderAdapter;
     private int[] images = {
@@ -39,6 +43,7 @@ public class HomeFragment extends Fragment {
     private Handler handler;
     private Runnable runnable;
     private int currentPage = 0;
+
     private RecyclerView recyclerView;
     private MyAdapter myAdapter;
     private List<MyItem> itemList;
@@ -50,8 +55,8 @@ public class HomeFragment extends Fragment {
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,10 +64,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -76,24 +77,12 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = view.findViewById(R.id.viewPager);
+        // Initialize the ViewPager for image slider
+        viewPager = view.findViewById(R.id.sliderImage);
         sliderAdapter = new SliderAdapter(images, getContext());
         viewPager.setAdapter(sliderAdapter);
 
-        recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        // Initialize the item list
-        itemList = new ArrayList<>();
-        itemList.add(new MyItem("Americano", "Budak 1", R.drawable.image1));
-        itemList.add(new MyItem("Latte", "Budak 2", R.drawable.image2));
-        itemList.add(new MyItem("Cappuccino", "Budak 3", R.drawable.image3));
-        // Add more items as needed
-
-        myAdapter = new MyAdapter(getContext(), itemList);
-        recyclerView.setAdapter(myAdapter);
-
-        // Set up automatic sliding
+        // Setup automatic sliding
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -105,7 +94,57 @@ public class HomeFragment extends Fragment {
                 handler.postDelayed(this, 3000); // Change slide every 3 seconds
             }
         };
-        handler.postDelayed(runnable, 3000); // Start sliding after 3 seconds
+        handler.postDelayed(runnable, 3000);
+
+        // Initialize RecyclerView
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        itemList = new ArrayList<>();
+        myAdapter = new MyAdapter(getContext(), itemList);
+        recyclerView.setAdapter(myAdapter);
+
+        // Load items from API
+        loadItemsFromApi();
+    }
+
+    private void loadItemsFromApi() {
+        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items"; // Replace with your API URL
+
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    itemList.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject jsonObject = response.getJSONObject(i);
+                            int id = jsonObject.getInt("item_id");
+                            String name = jsonObject.getString("item_name");
+                            double price = jsonObject.getDouble("price");
+
+                            // Decode Base64 image
+                            String base64Image = jsonObject.getString("image_item");
+                            byte[] imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT);
+
+                            // Create a bitmap from the image bytes
+                            Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+                            // Add the item to the list
+                            itemList.add(new MyItem(id, name, price, imageBitmap));
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        Log.e("Volley", "JSON Parsing Error: " + e.getMessage());
+                    }
+                },
+                error -> Log.e("Volley", "Error: " + error.getMessage())
+        );
+
+        requestQueue.add(jsonArrayRequest);
     }
 
     @Override
@@ -120,4 +159,3 @@ public class HomeFragment extends Fragment {
         handler.postDelayed(runnable, 3000); // Resume sliding when fragment is resumed
     }
 }
-

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ public class HistoryFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private Button btnProses, btnSelesai;
     private RecyclerView recyclerView;
     private HistoryAdapter adapter;
     private List<HistoryItem> itemList;
@@ -58,7 +60,8 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        // Initialize RecyclerView
+        btnProses = view.findViewById(R.id.btnProses);
+        btnSelesai = view.findViewById(R.id.btnSelesai);
         recyclerView = view.findViewById(R.id.recyclerView2);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
