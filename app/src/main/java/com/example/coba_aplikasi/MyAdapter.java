@@ -1,62 +1,121 @@
 package com.example.coba_aplikasi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.MyItem;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private Context context;
-    private List<MyItem> itemList;
+    private List<MyItem> items;
 
-    public MyAdapter(Context context, List<MyItem> itemList) {
+    public MyAdapter(Context context, List<MyItem> items) {
         this.context = context;
-        this.itemList = itemList;
+        this.items = items;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_layout, parent, false);
-        return new MyViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        MyItem currentItem = itemList.get(position);
-        holder.name.setText(currentItem.getTextnama());
-        holder.price.setText("Rp " + currentItem.getPrice());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        MyItem item = items.get(position);
 
-        // Load the image from URL using Glide
-        holder.image.setImageBitmap(currentItem.getImageItem());
+        // Set item name and price
+        holder.itemName.setText(item.getTextnama());
+        holder.itemPrice.setText("Rp " + item.getPrice());
+
+        // Set item image (Bitmap)
+        if (item.getImageItem() != null) {
+            holder.itemImage.setImageBitmap(item.getImageItem());
+        } else {
+
+        }
+
+        // Set onClickListener for "Add to Cart" button
+        holder.addToCartButton.setOnClickListener(v -> addToCart(item.getId(), item.getTextnama(), 1)); // Default quantity = 1
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return items.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView name, price;
-        ImageView image;
+    private void addToCart(int itemId, String itemName, int quantity) {
+        SharedPreferences prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE);
+        int customerId = prefs.getInt("customer_id", -1); // Get customer_id from session
 
-        public MyViewHolder(View itemView) {
+        if (customerId == -1) {
+            Log.e("Cart", "Customer is not logged in");
+            Toast.makeText(context, "Gagal menambahkan ke keranjang, login diperlukan", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = "http://192.168.146.156/makaryo2/api.php?action=add_to_cart";
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Cart", "Response: " + response);
+                    Toast.makeText(context, itemName + " berhasil ditambahkan ke keranjang", Toast.LENGTH_SHORT).show();
+                },
+                error -> {
+                    Log.e("Cart", "Error: " + error.getMessage());
+                    Toast.makeText(context, "Gagal menambahkan ke keranjang", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("item_id", String.valueOf(itemId));
+                params.put("quantity", String.valueOf(quantity));
+                params.put("item_name", String.valueOf(itemName));
+                params.put("customer_id", String.valueOf(customerId)); // Send customer_id
+                return params;
+            }
+        };
+
+        queue.add(request);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName, itemPrice;
+        ImageView itemImage;
+        Button addToCartButton;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.item_text1);
-            price = itemView.findViewById(R.id.item_text);
-            image = itemView.findViewById(R.id.item_image);
+            itemName = itemView.findViewById(R.id.item_text1);
+            itemPrice = itemView.findViewById(R.id.item_text);
+            itemImage = itemView.findViewById(R.id.item_image);
+            addToCartButton = itemView.findViewById(R.id.item_button);
         }
     }
 }

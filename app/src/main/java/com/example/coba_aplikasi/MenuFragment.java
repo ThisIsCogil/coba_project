@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,6 +46,7 @@ public class MenuFragment extends Fragment {
     private MyAdapter myAdapter;
     private List<MyItem> itemList;
     private RecyclerView recyclerView;
+    private ImageView btnCart;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -89,7 +93,13 @@ public class MenuFragment extends Fragment {
         // Initialize data
         itemList = new ArrayList<>();
         myAdapter = new MyAdapter(getContext(), itemList);
+        btnCart = view.findViewById(R.id.cartButton);
         recyclerView.setAdapter(myAdapter);
+
+        btnCart.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CartActivity.class);
+            startActivity(intent);
+        });
 
         // Load items from API
         loadItemsFromApi();

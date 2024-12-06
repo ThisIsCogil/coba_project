@@ -1,19 +1,20 @@
 package com.example.coba_aplikasi;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.android.volley.AuthFailureError;
-import com.example.coba_aplikasi.Dashboard;
-import com.example.coba_aplikasi.R;
-import com.example.coba_aplikasi.Register;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
-
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.material.textfield.TextInputEditText;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +60,6 @@ public class Login extends BottomSheetDialogFragment {
         });
 
         tvSwitchToRegister.setOnClickListener(v -> {
-            // Assuming this fragment is shown in a BottomSheetDialogFragment
             dismiss(); // Dismiss the current fragment
             new Register().show(getParentFragmentManager(), "LoginBottomSheet");
         });
@@ -78,13 +68,18 @@ public class Login extends BottomSheetDialogFragment {
     }
 
     private void LoginUser() {
-        String user = etUserlogin.getText().toString();
-        String password = etPasswordlogin.getText().toString();
+        String user = etUserlogin.getText().toString().trim();
+        String password = etPasswordlogin.getText().toString().trim();
 
-        // Create JSON object
+        // Validasi input kosong
+        if (user.isEmpty() || password.isEmpty()) {
+            Toast.makeText(getContext(), "Field tidak boleh kosong", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Membuat JSON body
         JSONObject jsonBody = new JSONObject();
         try {
-
             jsonBody.put("username", user);
             jsonBody.put("password", password);
         } catch (JSONException e) {
@@ -95,14 +90,23 @@ public class Login extends BottomSheetDialogFragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("ResponseRaw", response); // Log the raw response
+                        Log.d("ResponseRaw", response);
                         try {
-                            // Attempt to parse the response as JSON
                             JSONObject jsonResponse = new JSONObject(response);
                             String status = jsonResponse.getString("status");
                             String message = jsonResponse.getString("message");
+
                             if ("success".equals(status)) {
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                int customerId = jsonResponse.getInt("customer_id");
+
+                                // Simpan customer_id ke SharedPreferences
+                                SharedPreferences prefs = requireContext().getSharedPreferences("user_session", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putInt("customer_id", customerId);
+                                editor.apply();
+
+                                // Arahkan ke Dashboard
                                 dismiss();
                                 Intent intent = new Intent(getActivity(), Dashboard.class);
                                 startActivity(intent);
@@ -112,7 +116,6 @@ public class Login extends BottomSheetDialogFragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "Server Error", Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 },
@@ -122,26 +125,19 @@ public class Login extends BottomSheetDialogFragment {
                         String errorMessage;
                         if (error.networkResponse != null && error.networkResponse.data != null) {
                             String responseBody = new String(error.networkResponse.data);
-                            Log.e("VolleyError", responseBody); // Log the error response
+                            Log.e("VolleyError", responseBody);
                             errorMessage = "Error: " + responseBody;
                         } else {
                             errorMessage = "Error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error");
                         }
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", user);
-                params.put("password", password);
-                return params;
             }
 
             @Override
@@ -150,11 +146,8 @@ public class Login extends BottomSheetDialogFragment {
             }
         };
 
-        if (user.isEmpty() || password.isEmpty()) {
-            Toast.makeText(getContext(), "Field Tidak Boleh Kosong", Toast.LENGTH_SHORT).show();
-        } else {
-            RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
-            requestQueue.add(stringRequest);
-        }
+        // Kirim request
+        Volley.newRequestQueue(requireContext()).add(stringRequest);
     }
+
 }

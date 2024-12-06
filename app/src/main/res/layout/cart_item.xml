@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:orientation="horizontal">
+
+    <!-- Gambar Produk -->
+    <ImageView
+        android:id="@+id/img_product"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/logo_start"
+        android:contentDescription="Product Image"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Detail Produk -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <!-- Nama Produk -->
+        <TextView
+            android:id="@+id/tv_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <!-- Harga Produk -->
+        <TextView
+            android:id="@+id/tv_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#7A81FF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Pengaturan Jumlah Produk -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <!-- Tombol Kurangi (-) -->
+        <Button
+            android:id="@+id/btn_decrease"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_minus"
+            android:text="-"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:backgroundTint="@color/choco" />
+
+        <!-- Jumlah Produk -->
+        <TextView
+            android:id="@+id/tv_item_quantity"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/quantity_bg"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <!-- Tombol Tambah (+) -->
+        <Button
+            android:id="@+id/btn_increase"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_add"
+            android:text="+"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:backgroundTint="@color/choco" />
+    </LinearLayout>
+
+</LinearLayout>
