@@ -174,24 +174,41 @@ public class CartActivity extends AppCompatActivity {
         }
 
         String url = "http://192.168.146.156/makaryo2/api.php?action=update_cart_item";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("CartActivity", "Item quantity updated");
-                    cartAdapter.notifyDataSetChanged();
-                },
-                error -> Log.e("CartActivity", "Error updating item quantity: " + error.getMessage())) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("customer_id", String.valueOf(customerId));
-                params.put("item_id", String.valueOf(item.getId()));
-                params.put("quantity", String.valueOf(newQuantity));
-                return params;
-            }
-        };
 
-        requestQueue.add(stringRequest);
+        // Membuat JSON object untuk dikirim
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("customer_id", customerId);
+            jsonBody.put("item_id", item.getId());
+            jsonBody.put("quantity", newQuantity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("CartActivity", "JSON error: " + e.getMessage());
+            return;
+        }
+
+        // Menggunakan JsonObjectRequest
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
+                response -> {
+                    try {
+                        String status = response.getString("status");
+                        if (status.equals("success")) {
+                            Log.d("CartActivity", "Item quantity updated");
+                            cartAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.e("CartActivity", "Error: " + response.getString("message"));
+                        }
+                    } catch (JSONException e) {
+                        Log.e("CartActivity", "JSON parse error: " + e.getMessage());
+                    }
+                },
+                error -> Log.e("CartActivity", "Error updating item quantity: " + error.getMessage())
+        );
+
+        requestQueue.add(jsonRequest);
     }
+
 
     private void deleteCartItem(CartItem item) {
         SharedPreferences prefs = getSharedPreferences("user_session", Context.MODE_PRIVATE);
