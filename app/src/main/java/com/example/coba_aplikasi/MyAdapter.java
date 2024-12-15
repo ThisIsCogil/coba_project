@@ -22,6 +22,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,18 +51,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MyItem item = items.get(position);
 
-        // Set item name and price
+        // Set item name
         holder.itemName.setText(item.getTextnama());
-        holder.itemPrice.setText("Rp " + item.getPrice());
+
+        // Format harga dengan DecimalFormat
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.'); // Pemisah ribuan
+        symbols.setDecimalSeparator(','); // Pemisah desimal
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00", symbols);
+        String formattedPrice = "Rp " + decimalFormat.format(item.getPrice());
+        holder.itemPrice.setText(formattedPrice);
+
+        // Debug harga
+        Log.d("DebugHarga", "Harga asli: " + item.getPrice());
+        Log.d("DebugHarga", "Harga terformat: " + formattedPrice);
 
         // Set item image (Bitmap)
         if (item.getImageItem() != null) {
             holder.itemImage.setImageBitmap(item.getImageItem());
         } else {
-
+            holder.itemImage.setImageResource(R.drawable.logo_start);
         }
 
-        // Set onClickListener for "Add to Cart" button
+        // Set onClickListener untuk tombol "Add to Cart"
         holder.addToCartButton.setOnClickListener(v -> addToCart(item.getId(), item.getTextnama(), 1)); // Default quantity = 1
     }
 
@@ -71,7 +85,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private void addToCart(int itemId, String itemName, int quantity) {
         SharedPreferences prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE);
-        int customerId = prefs.getInt("customer_id", -1); // Get customer_id from session
+        int customerId = prefs.getInt("customer_id", -1); // Get customer_id dari session
 
         if (customerId == -1) {
             Log.e("Cart", "Customer is not logged in");
@@ -96,8 +110,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 Map<String, String> params = new HashMap<>();
                 params.put("item_id", String.valueOf(itemId));
                 params.put("quantity", String.valueOf(quantity));
-                params.put("item_name", String.valueOf(itemName));
-                params.put("customer_id", String.valueOf(customerId)); // Send customer_id
+                params.put("item_name", itemName); // Tidak perlu String.valueOf
+                params.put("customer_id", String.valueOf(customerId)); // Kirim customer_id
                 return params;
             }
         };

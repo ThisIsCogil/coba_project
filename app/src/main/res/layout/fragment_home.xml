@@ -84,53 +84,53 @@
             app:layout_constraintTop_toBottomOf="@+id/sliderImage" />
 
         <Button
-            android:id="@+id/buttonallMenu"
+            android:id="@+id/buttonHotDrink"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="6dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/square_button"
+            android:drawableBottom="@drawable/ic_hotdrink"
             android:contentDescription="NULL"
-            android:drawableTop="@drawable/ic_food"
             android:gravity="center"
             app:backgroundTint="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/buttonCoffee"
+            app:layout_constraintEnd_toStartOf="@+id/buttonIceDrink"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textLihatmenu" />
 
         <Button
-            android:id="@+id/buttonCoffee"
+            android:id="@+id/buttonIceDrink"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="6dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/square_button"
+            android:drawableBottom="@drawable/ic_icedrink"
             android:contentDescription="NULL"
-            android:drawableTop="@drawable/ic_food"
-            android:gravity="center"
-            app:backgroundTint="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/buttonMilkshake"
-            app:layout_constraintStart_toEndOf="@+id/buttonallMenu"
-            app:layout_constraintTop_toBottomOf="@+id/textLihatmenu" />
-
-        <Button
-            android:id="@+id/buttonMilkshake"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/square_button"
-            android:contentDescription="NULL"
-            android:drawableTop="@drawable/ic_food"
             android:gravity="center"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/buttonTea"
-            app:layout_constraintStart_toEndOf="@+id/buttonCoffee"
+            app:layout_constraintStart_toEndOf="@+id/buttonHotDrink"
             app:layout_constraintTop_toBottomOf="@+id/textLihatmenu" />
 
         <Button
             android:id="@+id/buttonTea"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="6dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/square_button"
+            android:drawableBottom="@drawable/ic_tea"
+            android:contentDescription="NULL"
+            android:gravity="center"
+            app:backgroundTint="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/buttonSnack"
+            app:layout_constraintStart_toEndOf="@+id/buttonIceDrink"
+            app:layout_constraintTop_toBottomOf="@+id/textLihatmenu" />
+
+        <Button
+            android:id="@+id/buttonSnack"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="6dp"
@@ -141,7 +141,7 @@
             android:gravity="center"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonMilkshake"
+            app:layout_constraintStart_toEndOf="@+id/buttonTea"
             app:layout_constraintTop_toBottomOf="@+id/textLihatmenu" />
 
         <TextView
@@ -150,10 +150,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="All Menu"
-            app:layout_constraintEnd_toEndOf="@id/buttonallMenu"
-            app:layout_constraintStart_toStartOf="@id/buttonallMenu"
-            app:layout_constraintTop_toBottomOf="@id/buttonallMenu" />
+            android:text="Hot Drink"
+            app:layout_constraintEnd_toEndOf="@id/buttonHotDrink"
+            app:layout_constraintStart_toStartOf="@id/buttonHotDrink"
+            app:layout_constraintTop_toBottomOf="@id/buttonHotDrink" />
 
         <TextView
             android:id="@+id/textView2"
@@ -161,24 +161,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="Coffee"
-            app:layout_constraintEnd_toEndOf="@id/buttonCoffee"
-            app:layout_constraintStart_toStartOf="@id/buttonCoffee"
-            app:layout_constraintTop_toBottomOf="@id/buttonCoffee" />
+            android:text="Ice Drink"
+            app:layout_constraintEnd_toEndOf="@id/buttonIceDrink"
+            app:layout_constraintStart_toStartOf="@id/buttonIceDrink"
+            app:layout_constraintTop_toBottomOf="@id/buttonIceDrink" />
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="MilkShake"
-            app:layout_constraintEnd_toEndOf="@id/buttonMilkshake"
-            app:layout_constraintStart_toStartOf="@id/buttonMilkshake"
-            app:layout_constraintTop_toBottomOf="@id/buttonMilkshake" />
-
-        <TextView
-            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -187,6 +176,17 @@
             app:layout_constraintEnd_toEndOf="@id/buttonTea"
             app:layout_constraintStart_toStartOf="@id/buttonTea"
             app:layout_constraintTop_toBottomOf="@id/buttonTea" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="Snack"
+            app:layout_constraintEnd_toEndOf="@id/buttonSnack"
+            app:layout_constraintStart_toStartOf="@id/buttonSnack"
+            app:layout_constraintTop_toBottomOf="@id/buttonSnack" />
 
         <TextView
             android:id="@+id/textView7"

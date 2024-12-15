@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import model.CartItem;
@@ -39,23 +41,35 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
 
+        // Set nama item
         holder.itemName.setText(item.getName());
-        holder.itemPrice.setText("Rp " + item.getPrice());
+
+        // Format harga
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator(',');
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00", symbols);
+        holder.itemPrice.setText("Rp " + decimalFormat.format(item.getPrice()));
+
+        // Set kuantitas
         holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
 
-        // Set image
+        // Set gambar
         Bitmap imageBitmap = item.getImage();
         if (imageBitmap != null) {
             holder.itemImage.setImageBitmap(imageBitmap);
+        } else {
+            holder.itemImage.setImageResource(R.drawable.logo_start);
         }
 
-        holder.btnIncrease.setOnClickListener(v -> listener.onQuantityChange(item, item.getQuantity() + 1));
-        holder.btnDecrease.setOnClickListener(v -> {
-            if (item.getQuantity() > 1) {
-                listener.onQuantityChange(item, item.getQuantity() - 1);
-            }
+        // Tambahkan logika tombol tambah dan kurang
+        holder.btnIncrease.setOnClickListener(v -> {
+            listener.onQuantityChange(item, item.getQuantity() + 1);
         });
-
+        holder.btnDecrease.setOnClickListener(v -> {
+            listener.onQuantityChange(item, item.getQuantity() - 1);
+        });
     }
 
     @Override
@@ -65,7 +79,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemName, itemPrice, itemQuantity;
-        ImageView itemImage; // Tambahkan ImageView
+        ImageView itemImage;
         Button btnIncrease, btnDecrease;
 
         public ViewHolder(@NonNull View itemView) {
@@ -73,15 +87,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             itemName = itemView.findViewById(R.id.tv_item_name);
             itemPrice = itemView.findViewById(R.id.tv_item_price);
             itemQuantity = itemView.findViewById(R.id.tv_item_quantity);
-            itemImage = itemView.findViewById(R.id.img_product); // Inisialisasi ImageView
+            itemImage = itemView.findViewById(R.id.img_product);
             btnIncrease = itemView.findViewById(R.id.btn_increase);
             btnDecrease = itemView.findViewById(R.id.btn_decrease);
-
         }
     }
 
     public interface OnCartActionListener {
         void onQuantityChange(CartItem item, int newQuantity);
-
     }
 }
