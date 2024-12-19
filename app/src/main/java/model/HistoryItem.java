@@ -1,34 +1,25 @@
 package model;
 
 public class HistoryItem {
+    private String orderName;
+    private String orderDate;
+    private double totalAmount;
 
-    private String textnama;
-    private String textharga2;
-    private String texttgl;
-    private int imageResId;
-
-    public HistoryItem(String textnama, String texttgl, String textharga2, int imageResId) {
-        this.textnama = textnama;
-        this.texttgl = texttgl;
-        this.textharga2 = textharga2;
-        this.imageResId = imageResId;
+    public HistoryItem(String orderName, String orderDate, double totalAmount) {
+        this.orderName = orderName;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
     }
 
-    public String getTextnama() {
-        return textnama;
+    public String getOrderName() {
+        return orderName;
     }
 
-    public String getTextharga() {
-        return textharga2;
+    public String getOrderDate() {
+        return orderDate;
     }
 
-    public String getTexttgl() {
-        return texttgl;
-    }
-
-    public int getImageResId() {
-        return imageResId;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 }
-
-

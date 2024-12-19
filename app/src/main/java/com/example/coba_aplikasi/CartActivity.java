@@ -256,6 +256,10 @@ public class CartActivity extends AppCompatActivity {
 
         paymentDialog = builder.create();
 
+        if (paymentDialog.getWindow() != null) {
+            paymentDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
         Spinner spinnerPaymentMethod = dialogView.findViewById(R.id.spinner_payment_method);
         ImageView imagePaymentProof = dialogView.findViewById(R.id.image_payment_proof);
         Button buttonUploadProof = dialogView.findViewById(R.id.button_upload_proof);

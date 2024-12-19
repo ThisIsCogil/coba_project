@@ -1,4 +1,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Selected State -->
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/choco" app:color="@color/choco" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
     <!-- Pressed State -->
     <item android:state_pressed="true">
         <shape>

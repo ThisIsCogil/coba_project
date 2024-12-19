@@ -17,12 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -47,6 +45,7 @@ public class MenuFragment extends Fragment {
     private List<MyItem> itemList;
     private RecyclerView recyclerView;
     private ImageView btnCart;
+    private List<MyItem> filteredItemList;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -73,7 +72,6 @@ public class MenuFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_menu, container, false);
     }
 
@@ -92,7 +90,8 @@ public class MenuFragment extends Fragment {
 
         // Initialize data
         itemList = new ArrayList<>();
-        myAdapter = new MyAdapter(getContext(), itemList);
+        filteredItemList = new ArrayList<>();
+        myAdapter = new MyAdapter(getContext(), filteredItemList);
         btnCart = view.findViewById(R.id.cartButton);
         recyclerView.setAdapter(myAdapter);
 
@@ -108,6 +107,25 @@ public class MenuFragment extends Fragment {
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView, (v, insets) -> {
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
             return insets;
+        });
+
+        // Setup SearchView to search via API
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchItemsFromApi(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    loadItemsFromApi();  // Reload all items if query is cleared
+                } else {
+                    searchItemsFromApi(newText);
+                }
+                return false;
+            }
         });
     }
 
@@ -138,6 +156,46 @@ public class MenuFragment extends Fragment {
 
                             // Add the item to the list
                             itemList.add(new MyItem(id, name, price, imageBitmap));
+                        }
+                        filteredItemList.addAll(itemList);
+                        myAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        Log.e("Volley", "JSON Parsing Error: " + e.getMessage());
+                    }
+                },
+                error -> Log.e("Volley", "Error: " + error.getMessage())
+        );
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void searchItemsFromApi(String query) {
+        String url = "http://192.168.146.156/makaryo2/api.php?action=search_item&query=" + query;
+
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    filteredItemList.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject jsonObject = response.getJSONObject(i);
+                            int id = jsonObject.getInt("item_id");
+                            String name = jsonObject.getString("item_name");
+                            double price = jsonObject.getDouble("price");
+
+                            // Decode Base64 image
+                            String base64Image = jsonObject.getString("image_item");
+                            byte[] imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT);
+
+                            // Create a bitmap from the image bytes
+                            Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+                            // Add the item to the filtered list
+                            filteredItemList.add(new MyItem(id, name, price, imageBitmap));
                         }
                         myAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {

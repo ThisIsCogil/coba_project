@@ -2,24 +2,22 @@ package com.example.coba_aplikasi;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.coba_aplikasi.R;
-
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import model.HistoryItem;
 
-
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-
     private Context context;
     private List<HistoryItem> itemList;
 
@@ -38,15 +36,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryItem item = itemList.get(position);
-        holder.imageView.setImageResource(item.getImageResId());
-        holder.textView.setText(item.getTextnama());
-        holder.textHarga.setText(item.getTextharga());
-        holder.textTgl.setText(item.getTexttgl());
 
-        // Handle item click
-        holder.itemView.setOnClickListener(v ->
-                Toast.makeText(context, "Clicked: " + item.getTextnama(), Toast.LENGTH_SHORT).show());
+        holder.orderName.setText(item.getOrderName());
+        holder.orderDate.setText(item.getOrderDate());
+
+        // Format jumlah dengan DecimalFormat
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator(',');
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00", symbols);
+        holder.totalAmount.setText("Rp " + decimalFormat.format(item.getTotalAmount()));
+
+        // Set gambar default dan efek hover
+        holder.itemImage.setImageResource(R.drawable.logo_start);
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -54,16 +60,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView, textHarga, textTgl;
+        TextView orderName, orderDate, totalAmount;
+        ImageView itemImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.itemImageView2);
-            textView = itemView.findViewById(R.id.itemTextView2);
-            textHarga = itemView.findViewById(R.id.itemTextharga);
-            textTgl = itemView.findViewById(R.id.itemTextTgl);
+            orderName = itemView.findViewById(R.id.itemTextView2);
+            orderDate = itemView.findViewById(R.id.itemTextTgl);
+            totalAmount = itemView.findViewById(R.id.itemTextharga);
+            itemImage = itemView.findViewById(R.id.itemImageView2);
         }
     }
 }
-
