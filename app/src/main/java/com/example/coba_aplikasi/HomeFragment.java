@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +19,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,6 +105,32 @@ public class HomeFragment extends Fragment {
 
         // Load items from API
         loadItemsFromApi();
+
+        // Initialize buttons
+        Button btnHotDrink = view.findViewById(R.id.buttonHotDrink);
+        Button btnIceDrink = view.findViewById(R.id.buttonIceDrink);
+        Button btnTea = view.findViewById(R.id.buttonTea);
+        Button btnSnack = view.findViewById(R.id.buttonSnack);
+
+        // Set onClick listeners for buttons
+        btnHotDrink.setOnClickListener(v -> navigateToMenuFragment("Hot"));
+        btnIceDrink.setOnClickListener(v -> navigateToMenuFragment("Ice"));
+        btnTea.setOnClickListener(v -> navigateToMenuFragment("Tea"));
+        btnSnack.setOnClickListener(v -> navigateToMenuFragment("Snack"));
+    }
+
+    private void navigateToMenuFragment(String category) {
+        MenuFragment menuFragment = new MenuFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("category", category);
+        menuFragment.setArguments(bundle);
+
+
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.framelayout, menuFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void loadItemsFromApi() {
@@ -113,10 +138,7 @@ public class HomeFragment extends Fragment {
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
-                url,
-                null,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     itemList.clear();
                     try {

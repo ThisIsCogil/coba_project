@@ -205,7 +205,6 @@ public class CartActivity extends AppCompatActivity {
                 },
                 error -> Log.e("CartActivity", "Error updating item quantity: " + error.getMessage())
         );
-
         requestQueue.add(jsonRequest);
     }
 

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
@@ -46,6 +47,7 @@ public class MenuFragment extends Fragment {
     private RecyclerView recyclerView;
     private ImageView btnCart;
     private List<MyItem> filteredItemList;
+    private Button btnHot, btnIce, btnTea, btnSnack;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -94,16 +96,98 @@ public class MenuFragment extends Fragment {
         myAdapter = new MyAdapter(getContext(), filteredItemList);
         btnCart = view.findViewById(R.id.cartButton);
         recyclerView.setAdapter(myAdapter);
+        btnHot = view.findViewById(R.id.btnHotDrink);
+        btnIce = view.findViewById(R.id.btnIceDrink);
+        btnTea = view.findViewById(R.id.btnTea);
+        btnSnack = view.findViewById(R.id.btnSnack);
 
+        // Button listeners for category filtering
+        btnHot.setOnClickListener(v -> {
+            // Set selected state for Hot Drink button
+            btnHot.setSelected(true);
+            btnIce.setSelected(false);
+            btnTea.setSelected(false);
+            btnSnack.setSelected(false);
+
+            // Load items for Hot Drink category
+            loadItemsFromApi("Hot");
+        });
+
+        btnIce.setOnClickListener(v -> {
+            // Set selected state for Ice Drink button
+            btnHot.setSelected(false);
+            btnIce.setSelected(true);
+            btnTea.setSelected(false);
+            btnSnack.setSelected(false);
+
+            // Load items for Ice Drink category
+            loadItemsFromApi("Ice");
+        });
+
+        btnTea.setOnClickListener(v -> {
+            // Set selected state for Tea button
+            btnHot.setSelected(false);
+            btnIce.setSelected(false);
+            btnTea.setSelected(true);
+            btnSnack.setSelected(false);
+
+            // Load items for Tea category
+            loadItemsFromApi("Tea");
+        });
+
+        btnSnack.setOnClickListener(v -> {
+            // Set selected state for Snack button
+            btnHot.setSelected(false);
+            btnIce.setSelected(false);
+            btnTea.setSelected(false);
+            btnSnack.setSelected(true);
+
+            // Load items for Snack category
+            loadItemsFromApi("Snack");
+        });
+
+
+        // Navigate to CartActivity when the cart button is clicked
         btnCart.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CartActivity.class);
             startActivity(intent);
         });
 
-        // Load items from API
-        loadItemsFromApi();
+        Bundle args = getArguments();
+        if (args != null) {
+            String category = args.getString("category");
+            if (category != null) {
+                // Load items based on the category received
+                loadItemsFromApi(category);
 
-        // Adjust for Bottom Navigation Bar
+                // Set the corresponding button to selected
+                switch (category) {
+                    case "Hot":
+                        btnHot.setSelected(true);
+                        loadItemsFromApi("Hot");
+                        break;
+                    case "Ice":
+                        btnIce.setSelected(true);
+                        loadItemsFromApi("Ice");
+                        break;
+                    case "Tea":
+                        btnTea.setSelected(true);
+                        loadItemsFromApi("Tea");
+                        break;
+                    case "Snack":
+                        btnSnack.setSelected(true);
+                        loadItemsFromApi("Snack");
+                        break;
+                }
+            } else {
+                loadItemsFromApi(null); // Load default items if no category
+            }
+        } else {
+            loadItemsFromApi(null); // Load default items if no arguments
+        }
+
+
+    // Adjust for Bottom Navigation Bar
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView, (v, insets) -> {
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
             return insets;
@@ -120,7 +204,7 @@ public class MenuFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    loadItemsFromApi();  // Reload all items if query is cleared
+                    loadItemsFromApi(null);  // Reload all items if query is cleared
                 } else {
                     searchItemsFromApi(newText);
                 }
@@ -129,15 +213,17 @@ public class MenuFragment extends Fragment {
         });
     }
 
-    private void loadItemsFromApi() {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items"; // Replace with your API URL
+    private void loadItemsFromApi(String category) {
+        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items";
+
+        // If category is provided, add it to the URL as a parameter
+        if (category != null && !category.isEmpty()) {
+            url += "&category=" + category;
+        }
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
-                url,
-                null,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     itemList.clear();
                     try {
@@ -157,6 +243,7 @@ public class MenuFragment extends Fragment {
                             // Add the item to the list
                             itemList.add(new MyItem(id, name, price, imageBitmap));
                         }
+                        filteredItemList.clear();
                         filteredItemList.addAll(itemList);
                         myAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
@@ -204,7 +291,6 @@ public class MenuFragment extends Fragment {
                 },
                 error -> Log.e("Volley", "Error: " + error.getMessage())
         );
-
         requestQueue.add(jsonArrayRequest);
     }
 }
