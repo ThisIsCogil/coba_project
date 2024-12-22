@@ -91,8 +91,6 @@ public class CartActivity extends AppCompatActivity {
                 showPaymentDialog();
             }
         });
-
-
         loadCartItems();
     }
 

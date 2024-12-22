@@ -83,6 +83,22 @@ public class Register extends BottomSheetDialogFragment {
         String username = etUser.getText().toString();
         String password = etPassword.getText().toString();
 
+        if (!email.matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+            Toast.makeText(getContext(), "Format Email Tidak Valid", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate username format (must contain both letters and numbers)
+        if (!username.matches("^(?=.*[a-zA-Z])(?=.*\\d).+$")) {
+            Toast.makeText(getContext(), "Username harus gabungan huruf dan angka", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate password length
+        if (password.length() < 5) {
+            Toast.makeText(getContext(), "Password harus memiliki minimal 5 karakter", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Create JSON object
         JSONObject jsonBody = new JSONObject();
         try {
