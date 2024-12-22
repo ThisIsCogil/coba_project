@@ -94,7 +94,7 @@ public class Register extends BottomSheetDialogFragment {
             e.printStackTrace();
         }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.146.156/makaryo2/api.php?action=register",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.149.184/makaryo/api.php?action=register",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -86,7 +86,7 @@ public class Login extends BottomSheetDialogFragment {
             e.printStackTrace();
         }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.146.156/makaryo2/api.php?action=login",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.149.184/makaryo/api.php?action=login",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -105,7 +105,7 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://192.168.146.156/makaryo2/api.php?action=get_cart_items&customer_id=" + customerId;
+        String url = "http://192.168.149.184/makaryo/api.php?action=get_cart_items&customer_id=" + customerId;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -182,7 +182,7 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://192.168.146.156/makaryo2/api.php?action=update_cart_item";
+        String url = "http://192.168.149.184/makaryo/api.php?action=update_cart_item";
 
         // Membuat JSON object untuk dikirim
         JSONObject jsonBody = new JSONObject();
@@ -227,7 +227,7 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://192.168.146.156/makaryo2/api.php?action=delete_cart_item";
+        String url = "http://192.168.149.184/makaryo/api.php?action=delete_cart_item";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     cartItems.remove(item);
@@ -334,7 +334,7 @@ public class CartActivity extends AppCompatActivity {
 
 
     private void confirmPayment(String customerId, String paymentMethod) {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=submit_payment";
+        String url = "http://192.168.149.184/makaryo/api.php?action=submit_payment";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
