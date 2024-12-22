@@ -1,14 +1,19 @@
 package com.example.coba_aplikasi;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +25,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,13 +113,16 @@ public class HomeFragment extends Fragment {
         // Load items from API
         loadItemsFromApi();
 
+        // Initialize profile image
+
         // Initialize buttons
         Button btnHotDrink = view.findViewById(R.id.buttonHotDrink);
         Button btnIceDrink = view.findViewById(R.id.buttonIceDrink);
         Button btnTea = view.findViewById(R.id.buttonTea);
         Button btnSnack = view.findViewById(R.id.buttonSnack);
+        TextView textLhtsemua = view.findViewById(R.id.textLihatmenu);
 
-        // Set onClick listeners for buttons
+        textLhtsemua.setOnClickListener(v -> navigateToMenuFragment(null));
         btnHotDrink.setOnClickListener(v -> navigateToMenuFragment("Hot"));
         btnIceDrink.setOnClickListener(v -> navigateToMenuFragment("Ice"));
         btnTea.setOnClickListener(v -> navigateToMenuFragment("Tea"));
@@ -120,12 +130,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToMenuFragment(String category) {
+        Dashboard activity = (Dashboard) requireActivity();
         MenuFragment menuFragment = new MenuFragment();
         Bundle bundle = new Bundle();
         bundle.putString("category", category);
         menuFragment.setArguments(bundle);
-
-
 
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.framelayout, menuFragment)
@@ -134,7 +143,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadItemsFromApi() {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items"; // Replace with your API URL
+        String url = "http://192.168.146.156/makaryo2/api.php?action=filter_items"; // Replace with your API URL
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
@@ -150,7 +159,7 @@ public class HomeFragment extends Fragment {
 
                             // Decode Base64 image
                             String base64Image = jsonObject.getString("image_item");
-                            byte[] imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT);
+                            byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
 
                             // Create a bitmap from the image bytes
                             Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);

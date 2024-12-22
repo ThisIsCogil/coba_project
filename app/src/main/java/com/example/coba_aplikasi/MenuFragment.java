@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -48,6 +49,7 @@ public class MenuFragment extends Fragment {
     private ImageView btnCart;
     private List<MyItem> filteredItemList;
     private Button btnHot, btnIce, btnTea, btnSnack;
+    private ProgressBar progressBar;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -100,6 +102,7 @@ public class MenuFragment extends Fragment {
         btnIce = view.findViewById(R.id.btnIceDrink);
         btnTea = view.findViewById(R.id.btnTea);
         btnSnack = view.findViewById(R.id.btnSnack);
+        progressBar = view.findViewById(R.id.progressBar);
 
         // Button listeners for category filtering
         btnHot.setOnClickListener(v -> {
@@ -216,15 +219,17 @@ public class MenuFragment extends Fragment {
     private void loadItemsFromApi(String category) {
         String url = "http://192.168.146.156/makaryo2/api.php?action=get_items";
 
-        // If category is provided, add it to the URL as a parameter
         if (category != null && !category.isEmpty()) {
             url += "&category=" + category;
         }
+
+        progressBar.setVisibility(View.VISIBLE); // Tampilkan ProgressBar
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
+                    progressBar.setVisibility(View.GONE); // Sembunyikan ProgressBar
                     itemList.clear();
                     try {
                         for (int i = 0; i < response.length(); i++) {
@@ -236,11 +241,8 @@ public class MenuFragment extends Fragment {
                             // Decode Base64 image
                             String base64Image = jsonObject.getString("image_item");
                             byte[] imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT);
-
-                            // Create a bitmap from the image bytes
                             Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-                            // Add the item to the list
                             itemList.add(new MyItem(id, name, price, imageBitmap));
                         }
                         filteredItemList.clear();
@@ -250,11 +252,15 @@ public class MenuFragment extends Fragment {
                         Log.e("Volley", "JSON Parsing Error: " + e.getMessage());
                     }
                 },
-                error -> Log.e("Volley", "Error: " + error.getMessage())
+                error -> {
+                    progressBar.setVisibility(View.GONE); // Sembunyikan ProgressBar
+                    Log.e("Volley", "Error: " + error.getMessage());
+                }
         );
 
         requestQueue.add(jsonArrayRequest);
     }
+
 
     private void searchItemsFromApi(String query) {
         String url = "http://192.168.146.156/makaryo2/api.php?action=search_item&query=" + query;

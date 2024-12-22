@@ -82,7 +82,16 @@ public class CartActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         orderNowButton = findViewById(R.id.btn_order_now);
-        orderNowButton.setOnClickListener(v -> showPaymentDialog());
+        orderNowButton.setOnClickListener(v -> {
+            if (cartItems.isEmpty()) {
+                // Cart is empty, show a toast
+                Toast.makeText(CartActivity.this, "Keranjang Kosong.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Cart is not empty, show the payment dialog
+                showPaymentDialog();
+            }
+        });
+
 
         loadCartItems();
     }
