@@ -272,7 +272,7 @@ public class CartActivity extends AppCompatActivity {
         Button buttonConfirmPayment = dialogView.findViewById(R.id.button_confirm_payment);
 
         // Set up spinner options
-        String[] paymentMethods = {"Bank BRI", "Bank Mandiri", "Bank BCA"};
+        String[] paymentMethods = {"Bank BRI - 613301034113539", "Bank Mandiri - 1560009817234" , "Bank BCA - 0011555510"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, paymentMethods);
         spinnerPaymentMethod.setAdapter(adapter);
 
