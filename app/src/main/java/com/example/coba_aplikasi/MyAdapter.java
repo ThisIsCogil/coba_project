@@ -93,7 +93,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             return;
         }
 
-        String url = "http://192.168.146.156/makaryo2/api.php?action=add_to_cart";
+        String url = "http://192.168.149.184/makaryo/api.php?action=add_to_cart";
 
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest request = new StringRequest(Request.Method.POST, url,

@@ -1,0 +1,78 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <!-- Gambar Profil -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="60dp"
+            app:cardElevation="8dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/profileImageEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/default_profile_image"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Nama Baru -->
+        <EditText
+            android:id="@+id/editProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Baru"
+            android:textColor="#5D4037"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edittext_bg" />
+
+        <!-- Tombol Ganti Foto Profil -->
+        <Button
+            android:id="@+id/changePhotoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ganti Foto Profil"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@null"
+            android:background="@drawable/rounded_button_brown"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Tombol Ganti Password -->
+        <Button
+            android:id="@+id/changePasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ganti Password"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@null"
+            android:background="@drawable/rounded_button_light_brown"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Tombol Simpan -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Simpan"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@null"
+            android:background="@drawable/rounded_button_brown"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

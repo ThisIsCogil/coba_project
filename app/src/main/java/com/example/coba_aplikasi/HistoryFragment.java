@@ -109,7 +109,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void fetchOrders(String status) {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=get_order_history";
+        String url = "http://192.168.149.184/makaryo/api.php?action=get_order_history";
         SharedPreferences prefs = requireContext().getSharedPreferences("user_session", Context.MODE_PRIVATE);
         int customerId = prefs.getInt("customer_id", -1);
 

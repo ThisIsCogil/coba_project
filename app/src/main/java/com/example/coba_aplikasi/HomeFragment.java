@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadItemsFromApi() {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=filter_items"; // Replace with your API URL
+        String url = "http://192.168.149.184/makaryo/api.php?action=filter_items"; // Replace with your API URL
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 

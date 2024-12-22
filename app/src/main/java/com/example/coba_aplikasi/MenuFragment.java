@@ -217,7 +217,7 @@ public class MenuFragment extends Fragment {
     }
 
     private void loadItemsFromApi(String category) {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=get_items";
+        String url = "http://192.168.149.184/makaryo/api.php?action=get_items";
 
         if (category != null && !category.isEmpty()) {
             url += "&category=" + category;
@@ -263,7 +263,7 @@ public class MenuFragment extends Fragment {
 
 
     private void searchItemsFromApi(String query) {
-        String url = "http://192.168.146.156/makaryo2/api.php?action=search_item&query=" + query;
+        String url = "http://192.168.149.184/makaryo/api.php?action=search_item&query=" + query;
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
